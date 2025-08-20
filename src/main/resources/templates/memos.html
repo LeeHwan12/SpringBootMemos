@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        /* 간단 스타일 (static/style.css 없으면 이 인라인만으로도 충분) */
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; max-width: 720px; margin: 40px auto; }
+        h1 { margin: 0 0 16px; }
+        form, .card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        input[type=text]{ width: 100%; padding: 10px 12px; border:1px solid #ddd; border-radius: 8px; }
+        .row { display: flex; gap: 8px; margin-top: 8px; }
+        button { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; }
+        .primary { background:#1F6FEB; color:#fff; }
+        .ghost { background:#f3f4f6; }
+        table { width: 100%; border-collapse: collapse; }
+        td, th { padding: 10px 8px; border-bottom: 1px solid #eee; }
+        .done { text-decoration: line-through; color: #999; }
+        .right { text-align: right; white-space: nowrap; }
+        .msg { color: #0a7; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h1>메모</h1>
+
+    <div th:if="${msg}" class="msg" th:text="${msg}"></div>
+
+    <form th:action="@{/memos}" method="post" class="card">
+        <label for="title">메모 내용</label>
+        <input id="title" name="title" type="text" placeholder="할 일을 입력하세요" required>
+        <div class="row">
+            <button class="primary" type="submit">추가</button>
+            <button class="ghost" type="reset">초기화</button>
+        </div>
+    </form>
+
+    <div class="card">
+        <table>
+            <thead>
+            <tr><th>ID</th><th>내용</th><th class="right">액션</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${memos}">
+                <td th:text="${m.id}">1</td>
+                <td th:classappend="${m.done} ? 'done'">
+                    <span th:text="${m.title}">Sample</span>
+                </td>
+                <td class="right">
+                    <form th:action="@{|/memos/${m.id}/toggle|}" method="post" style="display:inline">
+                        <button type="submit" class="ghost" th:text="${m.done} ? '되돌리기' : '완료'"></button>
+                    </form>
+                    <form th:action="@{|/memos/${m.id}/delete|}" method="post" style="display:inline" onsubmit="return confirm('삭제할까요?')">
+                        <button type="submit" class="ghost">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(memos)}">
+                <td colspan="3" style="text-align:center;color:#777">메모가 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

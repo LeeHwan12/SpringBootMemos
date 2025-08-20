@@ -1,0 +1,10 @@
+spring:
+  thymeleaf:
+    cache: false   # 개발 편의: 템플릿 수정 즉시 반영
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.web.servlet.view: TRACE
+    org.thymeleaf: DEBUG
